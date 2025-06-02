@@ -34,6 +34,7 @@ class taskViewsets(viewsets.ModelViewSet):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils import timezone
 class TaskStatusUpdateView(APIView):
 
     def patch(self, request, pk):
@@ -45,7 +46,13 @@ class TaskStatusUpdateView(APIView):
         # Only admins or the assigned user can update status
         if not request.user.is_staff and task.assigned_to != request.user:
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
-
+        
+        # Restriction: regular users cannot complete overdue tasks
+        if not request.user.is_staff and task.duedate < timezone.now().date():
+            return Response({
+                'error': 'Cannot mark task as completed after due date without admin intervention.'
+            }, status=status.HTTP_403_FORBIDDEN)
+        
         task.status = 'completed'
         task.save()
         return Response({'message': 'Task marked as completed'}, status=status.HTTP_200_OK)

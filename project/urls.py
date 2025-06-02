@@ -46,11 +46,11 @@ schema_view = get_schema_view(
 from task.viewsets.task_viewsets import taskViewsets
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api-token-auth/', obtain_auth_token),
+    path('api/api-token-auth/', obtain_auth_token),
     # API Authentication
     path('v1/api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
-    path('api/tasks/<int:pk>/', taskViewsets.as_view(), name='task-detail'),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('api/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc')
+    path('api/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

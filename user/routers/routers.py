@@ -3,4 +3,4 @@ from ..viewsets.user_viewsets import userViewsets
 
 router = DefaultRouter()
 
-router.register('book', userViewsets, basename="userViewsets")
+router.register('user', userViewsets, basename="userViewsets") 
